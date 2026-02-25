@@ -30,7 +30,7 @@ const questions = [
     question: "Rosa Parks' refusal to give up her bus seat sparked which historic event?",
     options: ["Selma March", "Montgomery Bus Boycott", "Freedom Rides", "Sit-in Movement"],
     correct: 1,
-    fact: "The Montgomery Bus Boycott lasted 381 days and ended with a Supreme Court ruling that bus segregation was unconstitutional.",
+    fact: "Nine months before Rosa Parks, 15-year-old Claudette Colvin was the first person to refuse to give up her seat on a Montgomery bus. The subsequent Montgomery Bus Boycott lasted 381 days and ended with a Supreme Court ruling that bus segregation was unconstitutional.",
   },
   {
     question: "Who wrote the autobiography 'I Know Why the Caged Bird Sings'?",
