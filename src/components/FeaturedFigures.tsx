@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ConnectionTree from "./ConnectionTree";
+import FigureLayout from "./FigureLayout";
 
 const figures = [
   {
@@ -96,7 +96,7 @@ const FeaturedFigures = () => {
       </div>
 
       {selectedFigure && (
-        <ConnectionTree
+        <FigureLayout
           figureName={selectedFigure}
           onClose={() => setSelectedFigure(null)}
         />
