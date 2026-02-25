@@ -1,3 +1,6 @@
+import { useState } from "react";
+import ConnectionTree from "./ConnectionTree";
+
 const figures = [
   {
     name: "Harriet Tubman",
@@ -44,6 +47,8 @@ const figures = [
 ];
 
 const FeaturedFigures = () => {
+  const [selectedFigure, setSelectedFigure] = useState<string | null>(null);
+
   return (
     <section id="figures" className="py-24 bg-secondary/30">
       <div className="container mx-auto px-6">
@@ -54,13 +59,21 @@ const FeaturedFigures = () => {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground">
             Figures Who Changed <span className="text-gold-gradient">Everything</span>
           </h2>
+          <p className="text-muted-foreground font-body text-sm mt-4">
+            Select a figure to explore their connections
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {figures.map((figure, index) => (
             <article
               key={figure.name}
-              className="group bg-card border border-border rounded-xl p-8 hover:border-primary/40 hover:shadow-gold transition-all duration-500"
+              onClick={() => setSelectedFigure(figure.name)}
+              className={`group bg-card border rounded-xl p-8 cursor-pointer transition-all duration-500 ${
+                selectedFigure === figure.name
+                  ? "border-primary shadow-gold ring-1 ring-primary/30"
+                  : "border-border hover:border-primary/40 hover:shadow-gold"
+              }`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="text-4xl mb-4">{figure.emoji}</div>
@@ -74,10 +87,20 @@ const FeaturedFigures = () => {
               <p className="text-secondary-foreground font-body text-sm leading-relaxed">
                 {figure.description}
               </p>
+              <p className="text-primary/60 text-xs font-body mt-4 group-hover:text-primary transition-colors">
+                Tap to explore connections →
+              </p>
             </article>
           ))}
         </div>
       </div>
+
+      {selectedFigure && (
+        <ConnectionTree
+          figureName={selectedFigure}
+          onClose={() => setSelectedFigure(null)}
+        />
+      )}
     </section>
   );
 };
