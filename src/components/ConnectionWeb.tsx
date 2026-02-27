@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { X } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { X, ZoomIn } from "lucide-react";
 
 interface WebNode {
   id: string;
@@ -160,6 +160,7 @@ interface ConnectionWebProps {
 const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
   const [selectedNode, setSelectedNode] = useState<WebNode | null>(null);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const data = figureWebData[figureName];
 
   // Group nodes by category
@@ -501,6 +502,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             {/* Large image banner with zoom animation */}
             <div
               className="relative w-full h-[28rem] overflow-hidden cursor-pointer group"
+              onClick={() => setLightboxOpen(true)}
               style={{ borderBottom: `3px solid ${categoryColors[selectedNode.category]}` }}
             >
               {!imageErrors.has(selectedNode.id) ? (
@@ -520,6 +522,10 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+              {/* Zoom hint */}
+              <div className="absolute top-3 right-3 bg-background/70 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <ZoomIn className="w-5 h-5 text-foreground" />
+              </div>
               <div className="absolute bottom-3 left-5 right-5 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
                 <div className="flex items-center gap-2">
                   <h4 className="font-display font-bold text-foreground text-2xl drop-shadow-lg">
@@ -547,6 +553,43 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                 {selectedNode.detail}
               </p>
             </div>
+          </div>
+        )}
+
+        {/* Fullscreen lightbox */}
+        {lightboxOpen && selectedNode && (
+          <div
+            className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex items-center justify-center animate-fade-in cursor-pointer"
+            onClick={() => setLightboxOpen(false)}
+          >
+            <button
+              className="absolute top-5 right-5 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition-colors z-10"
+              onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
+              aria-label="Close lightbox"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center z-10">
+              <h3 className="font-display text-white text-2xl font-bold drop-shadow-lg">{selectedNode.label}</h3>
+              {selectedNode.year && (
+                <span className="text-sm text-primary font-body">{selectedNode.year}</span>
+              )}
+            </div>
+            {!imageErrors.has(selectedNode.id) ? (
+              <img
+                src={selectedNode.image}
+                alt={selectedNode.label}
+                className="max-w-[95vw] max-h-[90vh] object-contain animate-scale-in drop-shadow-2xl rounded-lg"
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <div
+                className="w-64 h-64 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: categoryColors[selectedNode.category] }}
+              >
+                <span className="text-7xl">{categoryEmoji[selectedNode.category]}</span>
+              </div>
+            )}
           </div>
         )}
       </div>
