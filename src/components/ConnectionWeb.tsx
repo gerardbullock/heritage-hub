@@ -36,11 +36,11 @@ const categoryEmoji: Record<WebNode["category"], string> = {
 
 // Cluster positions around the center (angle in degrees, distance from center)
 const clusterLayout: Record<WebNode["category"], { angle: number; dist: number }> = {
-  family: { angle: 200, dist: 1 },
-  associate: { angle: 340, dist: 1 },
-  event: { angle: 90, dist: 1.05 },
-  place: { angle: 150, dist: 1.1 },
-  organization: { angle: 30, dist: 1.1 },
+  family: { angle: 200, dist: 1.15 },
+  associate: { angle: 340, dist: 1.15 },
+  event: { angle: 90, dist: 1.2 },
+  place: { angle: 150, dist: 1.25 },
+  organization: { angle: 30, dist: 1.25 },
 };
 
 const figureWebData: Record<string, { image: string; nodes: WebNode[] }> = {
@@ -248,7 +248,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
 
       // Place nodes in a mini circle within the cluster
       const count = nodes.length;
-      const miniRadius = Math.max(50, count * 18);
+      const miniRadius = Math.max(65, count * 22);
       nodes.forEach((node, i) => {
         const a = (i / count) * 2 * Math.PI - Math.PI / 2;
         positions[node.id] = {
@@ -267,8 +267,8 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
     setImageErrors((prev) => new Set(prev).add(id));
   };
 
-  const centerX = 500;
-  const centerY = 400;
+  const centerX = 600;
+  const centerY = 420;
 
   // Line style per category (inspired by the ecomap legend)
   const lineStyles: Record<WebNode["category"], { dasharray: string; width: number }> = {
@@ -282,61 +282,57 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="absolute inset-0 bg-background/95 backdrop-blur-md animate-fade-in"
+        className="absolute inset-0 bg-background/97 backdrop-blur-lg animate-fade-in"
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-6xl max-h-[95vh] overflow-auto px-4 py-6">
-        {/* Close */}
+      <div className="relative z-10 w-full max-w-7xl max-h-[98vh] overflow-auto px-6 md:px-16 lg:px-24 py-8 md:py-12">
+        {/* Close button — top-right corner, compact */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-6 z-20 p-2 rounded-full bg-card border border-border hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+          className="fixed top-4 right-4 z-[70] p-1.5 rounded-full bg-card/80 border border-border/60 hover:bg-secondary transition-all text-muted-foreground hover:text-foreground backdrop-blur-sm"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
-        {/* Title */}
-        <div className="text-center mb-2">
-          <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-1">
-            Relationship Connection Ecomap
-          </p>
-          <h3 className="text-3xl md:text-4xl font-display font-bold text-foreground">
+        {/* Compact header */}
+        <div className="text-center mb-6">
+          <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground">
             {figureName}
           </h3>
+          {/* Inline legend */}
+          <div className="flex flex-wrap justify-center gap-3 mt-3">
+            {Object.entries(categoryLabels).map(([key, label]) => {
+              const style = lineStyles[key as WebNode["category"]];
+              return (
+                <div key={key} className="flex items-center gap-1.5 opacity-70">
+                  <svg width="20" height="6">
+                    <line
+                      x1="0" y1="3" x2="20" y2="3"
+                      stroke={categoryColors[key as WebNode["category"]]}
+                      strokeWidth={style.width}
+                      strokeDasharray={style.dasharray}
+                    />
+                  </svg>
+                  <span className="text-muted-foreground text-xs font-body">{label}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Legend */}
-        <div className="flex flex-wrap justify-center gap-4 mb-4">
-          {Object.entries(categoryLabels).map(([key, label]) => {
-            const style = lineStyles[key as WebNode["category"]];
-            return (
-              <div key={key} className="flex items-center gap-2">
-                <svg width="28" height="8">
-                  <line
-                    x1="0" y1="4" x2="28" y2="4"
-                    stroke={categoryColors[key as WebNode["category"]]}
-                    strokeWidth={style.width}
-                    strokeDasharray={style.dasharray}
-                  />
-                </svg>
-                <span className="text-muted-foreground text-sm font-body">{label}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Ecomap SVG */}
-        <div className="relative w-full mx-auto" style={{ maxWidth: 1000 }}>
-          <svg viewBox="0 0 1000 800" className="w-full h-auto">
+        {/* Ecomap SVG — generous panel */}
+        <div className="relative w-full mx-auto rounded-2xl bg-card/40 border border-border/30 backdrop-blur-sm p-4 md:p-8" style={{ maxWidth: 1100 }}>
+          <svg viewBox="0 0 1200 840" className="w-full h-auto">
             {/* Cluster ovals */}
             {Object.entries(grouped).map(([cat, nodes]) => {
               const layout = clusterLayout[cat as WebNode["category"]];
               const angleRad = (layout.angle * Math.PI) / 180;
-              const clusterDist = 260 * layout.dist;
+              const clusterDist = 310 * layout.dist;
               const cx = centerX + clusterDist * Math.cos(angleRad);
               const cy = centerY + clusterDist * Math.sin(angleRad);
               const count = nodes.length;
-              const r = Math.max(80, count * 25);
+              const r = Math.max(100, count * 28);
               const color = categoryColors[cat as WebNode["category"]];
 
               return (
@@ -395,20 +391,20 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             <circle
               cx={centerX}
               cy={centerY}
-              r="50"
+              r="70"
               fill="hsl(42 85% 55%)"
               stroke="hsl(42 90% 65%)"
-              strokeWidth="3"
+              strokeWidth="4"
             />
             <clipPath id="center-clip">
-              <circle cx={centerX} cy={centerY} r="48" />
+              <circle cx={centerX} cy={centerY} r="67" />
             </clipPath>
             <image
               href={data.image}
-              x={centerX - 48}
-              y={centerY - 48}
-              width="96"
-              height="96"
+              x={centerX - 67}
+              y={centerY - 67}
+              width="134"
+              height="134"
               clipPath="url(#center-clip)"
               preserveAspectRatio="xMidYMid slice"
             />
@@ -416,8 +412,8 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             <circle
               cx={centerX}
               cy={centerY}
-              r="48"
-              fill="hsl(30 10% 8% / 0.45)"
+              r="67"
+              fill="hsl(30 10% 8% / 0.4)"
             />
             <text
               x={centerX}
@@ -425,7 +421,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
               textAnchor="middle"
               dominantBaseline="middle"
               fill="hsl(40 30% 95%)"
-              fontSize="16"
+              fontSize="20"
               fontWeight="700"
               fontFamily="'Playfair Display', serif"
             >
@@ -435,11 +431,11 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             </text>
             <text
               x={centerX}
-              y={centerY + 20}
+              y={centerY + 24}
               textAnchor="middle"
               dominantBaseline="middle"
               fill="hsl(40 30% 95%)"
-              fontSize="16"
+              fontSize="20"
               fontWeight="700"
               fontFamily="'Playfair Display', serif"
             >
@@ -455,7 +451,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                 if (!pos) return null;
                 const color = categoryColors[cat as WebNode["category"]];
                 const isSelected = selectedNode?.id === node.id;
-                const nodeR = isSelected ? 34 : 28;
+                const nodeR = isSelected ? 44 : 36;
                 const hasError = imageErrors.has(node.id);
 
                 return (
@@ -514,7 +510,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fill="hsl(40 30% 95%)"
-                      fontSize={node.label.length > 18 ? "9" : node.label.length > 12 ? "10" : "11"}
+                      fontSize={node.label.length > 18 ? "10" : node.label.length > 12 ? "11.5" : "13"}
                       fontWeight="600"
                       fontFamily="'DM Sans', sans-serif"
                     >
@@ -527,20 +523,20 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                     {node.year && (
                       <>
                         <rect
-                          x={pos.x - 14}
-                          y={pos.y + nodeR - 2}
-                          width="28"
-                          height="12"
-                          rx="6"
+                          x={pos.x - 16}
+                          y={pos.y + nodeR}
+                          width="32"
+                          height="14"
+                          rx="7"
                           fill={color}
                         />
                         <text
                           x={pos.x}
-                          y={pos.y + nodeR + 5}
+                          y={pos.y + nodeR + 7}
                           textAnchor="middle"
                           dominantBaseline="middle"
                           fill="hsl(40 30% 95%)"
-                          fontSize="9"
+                          fontSize="10"
                           fontWeight="700"
                           fontFamily="'DM Sans', sans-serif"
                         >

@@ -121,28 +121,28 @@ const FeaturedFigures = () => {
       {selectedFigure && (
         <div>
           {/* View mode toggle */}
-          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex bg-card border border-border rounded-full p-1 shadow-gold">
-            <button
-              onClick={() => setViewMode("web")}
-              className={`px-4 py-1.5 rounded-full text-xs font-body transition-all ${
-                viewMode === "web"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Connection Web
-            </button>
-            <button
-              onClick={() => setViewMode("layout")}
-              className={`px-4 py-1.5 rounded-full text-xs font-body transition-all ${
-                viewMode === "layout"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Historical Layout
-            </button>
-          </div>
+           <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex bg-card/80 backdrop-blur-sm border border-border/50 rounded-full p-0.5 shadow-lg">
+             <button
+               onClick={() => setViewMode("web")}
+               className={`px-3 py-1 rounded-full text-[11px] font-body transition-all ${
+                 viewMode === "web"
+                   ? "bg-primary text-primary-foreground"
+                   : "text-muted-foreground hover:text-foreground"
+               }`}
+             >
+               Connection Web
+             </button>
+             <button
+               onClick={() => setViewMode("layout")}
+               className={`px-3 py-1 rounded-full text-[11px] font-body transition-all ${
+                 viewMode === "layout"
+                   ? "bg-primary text-primary-foreground"
+                   : "text-muted-foreground hover:text-foreground"
+               }`}
+             >
+               Historical Layout
+             </button>
+           </div>
 
           {viewMode === "web" ? (
             <ConnectionWeb
