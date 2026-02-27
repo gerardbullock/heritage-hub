@@ -238,12 +238,12 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
   const nodeAbsolutePositions = useMemo(() => {
     const positions: Record<string, { x: number; y: number }> = {};
     const cx = 600;
-    const cy = 420;
+    const cy = 380;
 
     Object.entries(grouped).forEach(([cat, nodes]) => {
       const layout = clusterLayout[cat as WebNode["category"]];
       const angleRad = (layout.angle * Math.PI) / 180;
-      const clusterDist = 340 * layout.dist;
+      const clusterDist = 360 * layout.dist;
       const clusterCX = cx + clusterDist * Math.cos(angleRad);
       const clusterCY = cy + clusterDist * Math.sin(angleRad);
 
@@ -275,15 +275,15 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
   };
 
   const centerX = 600;
-  const centerY = 420;
+  const centerY = 380;
 
   // Line style per category (inspired by the ecomap legend)
   const lineStyles: Record<WebNode["category"], { dasharray: string; width: number }> = {
-    family: { dasharray: "", width: 3 },
-    associate: { dasharray: "6 3", width: 2.5 },
-    event: { dasharray: "2 2", width: 2 },
-    place: { dasharray: "8 4 2 4", width: 2 },
-    organization: { dasharray: "4 2", width: 2.5 },
+    family: { dasharray: "", width: 3.5 },
+    associate: { dasharray: "7 3", width: 3 },
+    event: { dasharray: "3 3", width: 2.5 },
+    place: { dasharray: "9 4 3 4", width: 2.5 },
+    organization: { dasharray: "5 3", width: 3 },
   };
 
   // Determine if this is a "person" figure (has a local or wiki image, not an org logo style)
@@ -299,9 +299,9 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
       />
 
       {/* Fixed slim top bar */}
-      <div className="relative z-20 flex items-center h-12 px-4 bg-card/70 backdrop-blur-md border-b border-border/20 shrink-0">
+      <div className="relative z-20 flex items-center h-8 px-3 bg-card/50 backdrop-blur-md border-b border-border/10 shrink-0">
         {/* Legend inline */}
-        <div className="flex items-center gap-2.5 flex-1 overflow-x-auto">
+        <div className="flex items-center gap-2 flex-1 overflow-x-auto">
           {Object.entries(categoryLabels).map(([key, label]) => {
             const style = lineStyles[key as WebNode["category"]];
             return (
@@ -321,9 +321,9 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
         </div>
         <button
           onClick={onClose}
-          className="ml-2 p-1.5 rounded-full hover:bg-secondary transition-all text-muted-foreground hover:text-foreground shrink-0"
+          className="ml-2 p-1 rounded-full hover:bg-secondary transition-all text-muted-foreground hover:text-foreground shrink-0"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3.5 h-3.5" />
         </button>
       </div>
 
@@ -332,11 +332,11 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
 
         {/* Hero portrait section for individuals */}
         {isIndividual && (
-          <div className="relative w-full flex flex-col items-center pt-6 pb-4 px-4">
+          <div className="relative w-full flex flex-col items-center pt-3 pb-2 px-4">
             {/* Large circular portrait */}
             <div
-              className="relative rounded-full overflow-hidden shadow-[0_0_50px_-10px_hsl(42_85%_55%/0.35)] animate-scale-in"
-              style={{ width: 'clamp(220px, 40vw, 380px)', height: 'clamp(220px, 40vw, 380px)' }}
+              className="relative rounded-full overflow-hidden shadow-[0_0_60px_-8px_hsl(42_85%_55%/0.4)] animate-scale-in"
+              style={{ width: 'clamp(260px, 45vw, 440px)', height: 'clamp(260px, 45vw, 440px)' }}
             >
               <img
                 src={data.image}
@@ -355,11 +355,11 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             </div>
             {/* Gold ring accent */}
             <div
-              className="absolute rounded-full border-2 border-primary/40 pointer-events-none animate-fade-in"
+              className="absolute rounded-full border-2 border-primary/30 pointer-events-none animate-fade-in"
               style={{
-                width: 'clamp(236px, 41vw, 396px)',
-                height: 'clamp(236px, 41vw, 396px)',
-                top: 'calc(1.5rem - 8px)',
+                width: 'clamp(278px, 46.5vw, 458px)',
+                height: 'clamp(278px, 46.5vw, 458px)',
+                top: 'calc(0.75rem - 9px)',
               }}
             />
           </div>
@@ -367,7 +367,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
 
         {/* For groups/orgs, show a compact title instead */}
         {!isIndividual && (
-          <div className="pt-6 pb-2 text-center px-4">
+          <div className="pt-3 pb-1 text-center px-4">
             <h1 className="font-display font-bold text-foreground text-[clamp(1.6rem,3.5vw,2.4rem)] leading-tight">
               {figureName}
             </h1>
@@ -375,13 +375,13 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
         )}
 
         {/* Ecomap SVG */}
-        <div className="relative w-full mx-auto rounded-2xl bg-card/20 border border-border/10 backdrop-blur-sm p-4 md:p-8 lg:p-12 mt-4" style={{ maxWidth: 1200 }}>
-          <svg viewBox="0 0 1200 840" className="w-full h-auto" style={{ minHeight: '60vh' }}>
+        <div className="relative w-full mx-auto rounded-2xl bg-card/20 border border-border/10 backdrop-blur-sm p-4 md:p-8 lg:p-12 mt-2 mb-8" style={{ maxWidth: 1200 }}>
+          <svg viewBox="0 0 1200 840" className="w-full h-auto" style={{ minHeight: '55vh' }}>
             {/* Cluster ovals */}
             {Object.entries(grouped).map(([cat, nodes]) => {
               const layout = clusterLayout[cat as WebNode["category"]];
               const angleRad = (layout.angle * Math.PI) / 180;
-              const clusterDist = 340 * layout.dist;
+              const clusterDist = 360 * layout.dist;
               const cx = centerX + clusterDist * Math.cos(angleRad);
               const cy = centerY + clusterDist * Math.sin(angleRad);
               const count = nodes.length;
@@ -442,7 +442,14 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             {/* Center node — large & prominent */}
             <defs>
               <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="8" result="blur" />
+                <feGaussianBlur stdDeviation="12" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="node-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -452,21 +459,21 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             <circle
               cx={centerX}
               cy={centerY}
-              r="110"
+              r="145"
               fill="hsl(42 85% 55%)"
               stroke="hsl(42 90% 65%)"
-              strokeWidth="6"
+              strokeWidth="7"
               filter="url(#glow)"
             />
             <clipPath id="center-clip">
-              <circle cx={centerX} cy={centerY} r="106" />
+              <circle cx={centerX} cy={centerY} r="140" />
             </clipPath>
             <image
               href={data.image}
-              x={centerX - 106}
-              y={centerY - 106}
-              width="212"
-              height="212"
+              x={centerX - 140}
+              y={centerY - 140}
+              width="280"
+              height="280"
               clipPath="url(#center-clip)"
               preserveAspectRatio="xMidYMid slice"
             />
@@ -474,8 +481,8 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             <circle
               cx={centerX}
               cy={centerY}
-              r="106"
-              fill="hsl(30 10% 8% / 0.3)"
+              r="140"
+              fill="hsl(30 10% 8% / 0.25)"
             />
             <text
               x={centerX}
@@ -483,7 +490,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
               textAnchor="middle"
               dominantBaseline="middle"
               fill="hsl(40 30% 95%)"
-              fontSize="24"
+              fontSize="28"
               fontWeight="700"
               fontFamily="'Playfair Display', serif"
             >
@@ -493,11 +500,11 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             </text>
             <text
               x={centerX}
-              y={centerY + 24}
+              y={centerY + 28}
               textAnchor="middle"
               dominantBaseline="middle"
               fill="hsl(40 30% 95%)"
-              fontSize="24"
+              fontSize="28"
               fontWeight="700"
               fontFamily="'Playfair Display', serif"
             >
@@ -513,7 +520,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                 if (!pos) return null;
                 const color = categoryColors[cat as WebNode["category"]];
                 const isSelected = selectedNode?.id === node.id;
-                const nodeR = isSelected ? 50 : 42;
+                const nodeR = isSelected ? 54 : 46;
                 const hasError = imageErrors.has(node.id);
 
                 return (
@@ -521,17 +528,18 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                     key={node.id}
                     onClick={() => setSelectedNode(isSelected ? null : node)}
                     className="cursor-pointer"
-                    style={{ transition: "transform 0.3s" }}
+                    style={{ transition: "transform 0.3s, filter 0.3s" }}
                   >
                     <circle
                       cx={pos.x}
                       cy={pos.y}
-                      r={nodeR + 2}
+                      r={nodeR + 3}
                       fill={color}
-                      fillOpacity={isSelected ? 0.3 : 0.15}
+                      fillOpacity={isSelected ? 0.35 : 0.15}
                       stroke={color}
-                      strokeWidth={isSelected ? 2.5 : 1.5}
-                      strokeOpacity={isSelected ? 1 : 0.6}
+                      strokeWidth={isSelected ? 3 : 2}
+                      strokeOpacity={isSelected ? 1 : 0.7}
+                      filter={isSelected ? "url(#node-shadow)" : undefined}
                     />
                     {!hasError ? (
                       <>
@@ -552,7 +560,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                           cx={pos.x}
                           cy={pos.y}
                           r={nodeR}
-                          fill="hsl(30 10% 8% / 0.5)"
+                          fill="hsl(30 10% 8% / 0.4)"
                         />
                       </>
                     ) : (
@@ -571,8 +579,8 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                       y={pos.y}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fill="hsl(40 30% 95%)"
-                      fontSize={node.label.length > 18 ? "10" : node.label.length > 12 ? "11.5" : "13"}
+                      fill="hsl(40 100% 97%)"
+                      fontSize={node.label.length > 18 ? "11" : node.label.length > 12 ? "12.5" : "14"}
                       fontWeight="600"
                       fontFamily="'DM Sans', sans-serif"
                     >
