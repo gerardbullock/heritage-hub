@@ -236,15 +236,15 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
   // Compute positions for each node within its cluster
   const nodeAbsolutePositions = useMemo(() => {
     const positions: Record<string, { x: number; y: number }> = {};
-    const centerX = 500;
-    const centerY = 400;
+    const cx = 600;
+    const cy = 420;
 
     Object.entries(grouped).forEach(([cat, nodes]) => {
       const layout = clusterLayout[cat as WebNode["category"]];
       const angleRad = (layout.angle * Math.PI) / 180;
-      const clusterDist = 260 * layout.dist;
-      const clusterCX = centerX + clusterDist * Math.cos(angleRad);
-      const clusterCY = centerY + clusterDist * Math.sin(angleRad);
+      const clusterDist = 310 * layout.dist;
+      const clusterCX = cx + clusterDist * Math.cos(angleRad);
+      const clusterCY = cy + clusterDist * Math.sin(angleRad);
 
       // Place nodes in a mini circle within the cluster
       const count = nodes.length;
@@ -280,50 +280,50 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex flex-col">
       <div
         className="absolute inset-0 bg-background/97 backdrop-blur-lg animate-fade-in"
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-7xl max-h-[98vh] overflow-auto px-6 md:px-16 lg:px-24 py-8 md:py-12">
-        {/* Close button — top-right corner, compact */}
+      {/* Slim sticky top bar */}
+      <div className="relative z-20 flex items-center justify-between px-4 py-2 bg-card/60 backdrop-blur-md border-b border-border/30">
+        <div className="flex items-center gap-2">
+          {Object.entries(categoryLabels).map(([key, label]) => {
+            const style = lineStyles[key as WebNode["category"]];
+            return (
+              <div key={key} className="flex items-center gap-1 opacity-70">
+                <svg width="16" height="4">
+                  <line
+                    x1="0" y1="2" x2="16" y2="2"
+                    stroke={categoryColors[key as WebNode["category"]]}
+                    strokeWidth={style.width}
+                    strokeDasharray={style.dasharray}
+                  />
+                </svg>
+                <span className="text-muted-foreground text-[10px] font-body">{label}</span>
+              </div>
+            );
+          })}
+        </div>
         <button
           onClick={onClose}
-          className="fixed top-4 right-4 z-[70] p-1.5 rounded-full bg-card/80 border border-border/60 hover:bg-secondary transition-all text-muted-foreground hover:text-foreground backdrop-blur-sm"
+          className="p-1.5 rounded-full hover:bg-secondary transition-all text-muted-foreground hover:text-foreground"
         >
           <X className="w-4 h-4" />
         </button>
+      </div>
 
-        {/* Compact header */}
-        <div className="text-center mb-6">
-          <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground">
-            {figureName}
-          </h3>
-          {/* Inline legend */}
-          <div className="flex flex-wrap justify-center gap-3 mt-3">
-            {Object.entries(categoryLabels).map(([key, label]) => {
-              const style = lineStyles[key as WebNode["category"]];
-              return (
-                <div key={key} className="flex items-center gap-1.5 opacity-70">
-                  <svg width="20" height="6">
-                    <line
-                      x1="0" y1="3" x2="20" y2="3"
-                      stroke={categoryColors[key as WebNode["category"]]}
-                      strokeWidth={style.width}
-                      strokeDasharray={style.dasharray}
-                    />
-                  </svg>
-                  <span className="text-muted-foreground text-xs font-body">{label}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      {/* Scrollable content area */}
+      <div className="relative z-10 flex-1 overflow-auto flex flex-col items-center px-4 md:px-12 lg:px-20 pt-6 pb-12">
+        {/* Title */}
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground text-center mb-8">
+          {figureName}
+        </h1>
 
         {/* Ecomap SVG — generous panel */}
         <div className="relative w-full mx-auto rounded-2xl bg-card/40 border border-border/30 backdrop-blur-sm p-4 md:p-8" style={{ maxWidth: 1100 }}>
-          <svg viewBox="0 0 1200 840" className="w-full h-auto">
+          <svg viewBox="0 0 1200 840" className="w-full h-auto" style={{ minHeight: '60vh' }}>
             {/* Cluster ovals */}
             {Object.entries(grouped).map(([cat, nodes]) => {
               const layout = clusterLayout[cat as WebNode["category"]];
@@ -391,20 +391,20 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             <circle
               cx={centerX}
               cy={centerY}
-              r="70"
+              r="90"
               fill="hsl(42 85% 55%)"
               stroke="hsl(42 90% 65%)"
-              strokeWidth="4"
+              strokeWidth="5"
             />
             <clipPath id="center-clip">
-              <circle cx={centerX} cy={centerY} r="67" />
+              <circle cx={centerX} cy={centerY} r="86" />
             </clipPath>
             <image
               href={data.image}
-              x={centerX - 67}
-              y={centerY - 67}
-              width="134"
-              height="134"
+              x={centerX - 86}
+              y={centerY - 86}
+              width="172"
+              height="172"
               clipPath="url(#center-clip)"
               preserveAspectRatio="xMidYMid slice"
             />
@@ -412,8 +412,8 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             <circle
               cx={centerX}
               cy={centerY}
-              r="67"
-              fill="hsl(30 10% 8% / 0.4)"
+              r="86"
+              fill="hsl(30 10% 8% / 0.35)"
             />
             <text
               x={centerX}
@@ -611,7 +611,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
           </div>
         )}
 
-        {/* Fullscreen lightbox */}
+      {/* Fullscreen lightbox */}
         {lightboxOpen && selectedNode && (
           <div
             className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex items-center justify-center animate-fade-in cursor-pointer"
