@@ -45,6 +45,13 @@ const figures = [
     description: "Pioneering sociologist and intellectual whose scholarship laid the groundwork for the fight against racial injustice.",
     emoji: "📚",
   },
+  {
+    name: "Black Panther Party",
+    years: "1966–1982",
+    role: "Revolutionary Organization",
+    description: "Founded in Oakland to fight police brutality and systemic racism, they combined armed self-defense with community survival programs that fed thousands.",
+    emoji: "✊🏿",
+  },
 ];
 
 const FeaturedFigures = () => {

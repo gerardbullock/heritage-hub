@@ -150,6 +150,26 @@ const figureWebData: Record<string, { image: string; nodes: WebNode[] }> = {
       { id: "ghana", label: "Ghana", category: "place", image: "/images/naacp.jpg", detail: "Moved to Ghana in 1961, became a citizen, and died there in 1963 — the day before the March on Washington." },
     ],
   },
+  "Black Panther Party": {
+    image: "/images/black-panther-party.jpg",
+    nodes: [
+      { id: "founded", label: "Founded Oct 1966", category: "event", image: "/images/oakland-california.jpg", detail: "Founded on October 15, 1966, in Oakland, California, as the Black Panther Party for Self-Defense.", year: "1966" },
+      { id: "huey", label: "Huey P. Newton", category: "associate", image: "/images/huey-newton.jpg", detail: "Co-founder and Minister of Defense. His arrest in 1967 sparked the 'Free Huey' movement that galvanized support nationwide." },
+      { id: "bobby", label: "Bobby Seale", category: "associate", image: "/images/bobby-seale.jpg", detail: "Co-founder and Chairman. Bound and gagged during the Chicago Eight trial, becoming a symbol of judicial injustice." },
+      { id: "fred", label: "Fred Hampton", category: "associate", image: "/images/fred-hampton.jpg", detail: "Illinois chapter chairman. Built the Rainbow Coalition uniting diverse groups. Assassinated in his bed by police in a 1969 FBI-coordinated raid at age 21." },
+      { id: "angela", label: "Angela Davis", category: "associate", image: "/images/angela-davis.jpg", detail: "Activist, scholar, and political prisoner. Her trial and acquittal became a global cause célèbre for justice." },
+      { id: "eldridge", label: "Eldridge Cleaver", category: "associate", image: "/images/black-panther-party.jpg", detail: "Minister of Information and author of 'Soul on Ice.' Later fled to Algeria to escape arrest." },
+      { id: "elaine", label: "Elaine Brown", category: "associate", image: "/images/black-panther-party.jpg", detail: "Chairwoman from 1974–1977, the only woman to lead the party. Expanded community programs and political campaigns." },
+      { id: "breakfast", label: "Free Breakfast Program", category: "event", image: "/images/free-breakfast.jpg", detail: "Fed tens of thousands of children before school daily. So effective the federal government modeled its own program after it.", year: "1969" },
+      { id: "tenpoint", label: "Ten-Point Program", category: "event", image: "/images/black-panther-party.jpg", detail: "Their founding platform demanded land, bread, housing, education, clothing, justice, and peace for Black communities.", year: "1966" },
+      { id: "sacramento", label: "Sacramento Capitol March", category: "event", image: "/images/sacramento-march.jpg", detail: "In May 1967, armed Panthers entered the California State Capitol to protest the Mulford Act — drawing national attention.", year: "1967" },
+      { id: "cointelpro", label: "COINTELPRO", category: "event", image: "/images/black-panther-party.jpg", detail: "The FBI's covert program targeted the Panthers with infiltration, disinformation, and assassination — J. Edgar Hoover called them the greatest threat to national security.", year: "1968" },
+      { id: "oakland", label: "Oakland, California", category: "place", image: "/images/oakland-california.jpg", detail: "Birthplace and headquarters of the Party. The community programs here became a model for chapters nationwide." },
+      { id: "chicago", label: "Chicago, Illinois", category: "place", image: "/images/fred-hampton.jpg", detail: "Home of Fred Hampton's powerful Illinois chapter. The Rainbow Coalition united Black, Latino, and white working-class groups." },
+      { id: "sncc", label: "SNCC", category: "organization", image: "/images/march-on-washington.jpg", detail: "The Student Nonviolent Coordinating Committee collaborated with the Panthers. Stokely Carmichael briefly served as the Party's Honorary Prime Minister." },
+      { id: "newspaper", label: "The Black Panther", category: "organization", image: "/images/black-panther-party.jpg", detail: "The Party's weekly newspaper reached a peak circulation of 250,000, spreading their message and revolutionary art nationwide.", year: "1967" },
+    ],
+  },
 };
 
 interface ConnectionWebProps {
