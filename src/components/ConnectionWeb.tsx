@@ -497,17 +497,18 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
 
         {/* Detail panel */}
         {selectedNode && (
-          <div className="mt-4 max-w-xl mx-auto bg-card border border-border rounded-xl overflow-hidden animate-fade-up shadow-gold">
-            {/* Large image banner */}
+          <div className="mt-4 max-w-xl mx-auto bg-card border border-border rounded-xl overflow-hidden animate-scale-in shadow-gold">
+            {/* Large image banner with zoom animation */}
             <div
-              className="relative w-full h-48 overflow-hidden"
+              className="relative w-full h-64 overflow-hidden cursor-pointer group"
               style={{ borderBottom: `3px solid ${categoryColors[selectedNode.category]}` }}
             >
               {!imageErrors.has(selectedNode.id) ? (
                 <img
                   src={selectedNode.image}
                   alt={selectedNode.label}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out scale-110 group-hover:scale-125 animate-[zoomIn_0.8s_ease-out_forwards]"
+                  style={{ transformOrigin: 'center center' }}
                   onError={() => handleImageError(selectedNode.id)}
                 />
               ) : (
@@ -518,10 +519,10 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                   <span className="text-5xl">{categoryEmoji[selectedNode.category]}</span>
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
-              <div className="absolute bottom-3 left-5 right-5">
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+              <div className="absolute bottom-3 left-5 right-5 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
                 <div className="flex items-center gap-2">
-                  <h4 className="font-display font-bold text-foreground text-xl">
+                  <h4 className="font-display font-bold text-foreground text-2xl drop-shadow-lg">
                     {selectedNode.label}
                   </h4>
                   {selectedNode.year && (
