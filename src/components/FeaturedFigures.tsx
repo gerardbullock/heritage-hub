@@ -52,6 +52,13 @@ const figures = [
     description: "Founded in Oakland to fight police brutality and systemic racism, they combined armed self-defense with community survival programs that fed thousands.",
     emoji: "✊🏿",
   },
+  {
+    name: "Deacons for Defense",
+    years: "1964–1968",
+    role: "Armed Self-Defense Organization",
+    description: "Working-class Black men in Louisiana who took up arms to protect civil rights workers from Klan violence when no one else would.",
+    emoji: "🛡️",
+  },
 ];
 
 const FeaturedFigures = () => {

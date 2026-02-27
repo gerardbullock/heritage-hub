@@ -170,6 +170,24 @@ const figureWebData: Record<string, { image: string; nodes: WebNode[] }> = {
       { id: "newspaper", label: "The Black Panther", category: "organization", image: "/images/black-panther-party.jpg", detail: "The Party's weekly newspaper reached a peak circulation of 250,000, spreading their message and revolutionary art nationwide.", year: "1967" },
     ],
   },
+  "Deacons for Defense": {
+    image: "/images/deacons-defense.jpg",
+    nodes: [
+      { id: "founded", label: "Founded Nov 1964", category: "event", image: "/images/jonesboro-louisiana.jpg", detail: "Founded in Jonesboro, Louisiana, in November 1964 by Black men who were fed up with Klan terror and police inaction.", year: "1964" },
+      { id: "earnest", label: "Earnest 'Chilly Willy' Thomas", category: "associate", image: "/images/earnest-thomas.jpg", detail: "Co-founder and key organizer in Jonesboro. A Korean War veteran who applied military discipline to community defense." },
+      { id: "charles", label: "Charles Sims", category: "associate", image: "/images/charles-sims.jpg", detail: "President of the Bogalusa chapter. A fearless leader who personally confronted armed Klansmen to protect CORE workers." },
+      { id: "percy", label: "Percy Lee Bradford", category: "associate", image: "/images/deacons-defense.jpg", detail: "Early member and recruiter. Helped establish the organizational structure that allowed chapters to spread across the South." },
+      { id: "royan", label: "Royan Burris", category: "associate", image: "/images/deacons-defense.jpg", detail: "Vice president of the Bogalusa chapter. Wounded by a sniper while guarding a civil rights march in 1965." },
+      { id: "bogalusa", label: "Bogalusa Campaign", category: "event", image: "/images/bogalusa-louisiana.jpg", detail: "In 1965, the Deacons protected CORE workers in Bogalusa — a Klan stronghold and company town dominated by Crown Zellerbach paper mill.", year: "1965" },
+      { id: "klan", label: "Confronting the Klan", category: "event", image: "/images/klan-confrontation.jpg", detail: "Armed patrols deterred Klan night riders from attacking Black neighborhoods. Their visible armed presence broke the Klan's reign of terror.", year: "1965" },
+      { id: "charter", label: "State Charter Granted", category: "event", image: "/images/deacons-defense.jpg", detail: "Became the first armed Black self-defense organization to receive a state charter in Louisiana — a legal shield against prosecution.", year: "1965" },
+      { id: "meredith", label: "Meredith March", category: "event", image: "/images/core-march.jpg", detail: "Provided armed protection for the 1966 March Against Fear after James Meredith was shot on a Mississippi highway.", year: "1966" },
+      { id: "jonesboro", label: "Jonesboro, Louisiana", category: "place", image: "/images/jonesboro-louisiana.jpg", detail: "Birthplace of the Deacons. A small lumber town where Klan violence against Black residents went unchecked by local law enforcement." },
+      { id: "bogalusa_place", label: "Bogalusa, Louisiana", category: "place", image: "/images/bogalusa-louisiana.jpg", detail: "Known as 'Klantown USA.' The Crown Zellerbach paper mill dominated the economy, and the Klan controlled civic life." },
+      { id: "core", label: "CORE", category: "organization", image: "/images/core-march.jpg", detail: "The Congress of Racial Equality sent organizers into Louisiana. The Deacons formed specifically to protect these nonviolent workers from Klan attacks." },
+      { id: "naacp_link", label: "NAACP", category: "organization", image: "/images/naacp.jpg", detail: "Worked alongside the NAACP in voter registration drives across Louisiana, providing armed escorts for canvassers in hostile territories." },
+    ],
+  },
 };
 
 interface ConnectionWebProps {
