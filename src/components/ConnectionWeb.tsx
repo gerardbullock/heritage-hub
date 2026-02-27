@@ -20,10 +20,27 @@ const categoryColors: Record<WebNode["category"], string> = {
 
 const categoryLabels: Record<WebNode["category"], string> = {
   family: "Family",
-  event: "Key Event",
-  associate: "Associate",
-  place: "Place",
-  organization: "Organization",
+  event: "Key Events",
+  associate: "Associates",
+  place: "Places",
+  organization: "Organizations",
+};
+
+const categoryEmoji: Record<WebNode["category"], string> = {
+  family: "👪",
+  event: "📅",
+  associate: "🤝",
+  place: "📍",
+  organization: "🏛️",
+};
+
+// Cluster positions around the center (angle in degrees, distance from center)
+const clusterLayout: Record<WebNode["category"], { angle: number; dist: number }> = {
+  family: { angle: 200, dist: 1 },
+  associate: { angle: 340, dist: 1 },
+  event: { angle: 90, dist: 1.05 },
+  place: { angle: 150, dist: 1.1 },
+  organization: { angle: 30, dist: 1.1 },
 };
 
 const figureWebData: Record<string, { image: string; nodes: WebNode[] }> = {
@@ -145,32 +162,61 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const data = figureWebData[figureName];
 
-  const nodePositions = useMemo(() => {
-    if (!data) return [];
-    const nodes = data.nodes;
-    const count = nodes.length;
-    // Place nodes in a circle around center
-    return nodes.map((node, i) => {
-      const angle = (i / count) * 2 * Math.PI - Math.PI / 2;
-      const radius = 38; // % from center
-      const x = 50 + radius * Math.cos(angle);
-      const y = 50 + radius * Math.sin(angle);
-      return { ...node, x, y };
-    });
+  // Group nodes by category
+  const grouped = useMemo(() => {
+    if (!data) return {};
+    const groups: Record<string, WebNode[]> = {};
+    for (const node of data.nodes) {
+      if (!groups[node.category]) groups[node.category] = [];
+      groups[node.category].push(node);
+    }
+    return groups;
   }, [data]);
+
+  // Compute positions for each node within its cluster
+  const nodeAbsolutePositions = useMemo(() => {
+    const positions: Record<string, { x: number; y: number }> = {};
+    const centerX = 500;
+    const centerY = 400;
+
+    Object.entries(grouped).forEach(([cat, nodes]) => {
+      const layout = clusterLayout[cat as WebNode["category"]];
+      const angleRad = (layout.angle * Math.PI) / 180;
+      const clusterDist = 260 * layout.dist;
+      const clusterCX = centerX + clusterDist * Math.cos(angleRad);
+      const clusterCY = centerY + clusterDist * Math.sin(angleRad);
+
+      // Place nodes in a mini circle within the cluster
+      const count = nodes.length;
+      const miniRadius = Math.max(50, count * 18);
+      nodes.forEach((node, i) => {
+        const a = (i / count) * 2 * Math.PI - Math.PI / 2;
+        positions[node.id] = {
+          x: clusterCX + miniRadius * Math.cos(a),
+          y: clusterCY + miniRadius * Math.sin(a),
+        };
+      });
+    });
+
+    return positions;
+  }, [grouped]);
 
   if (!data) return null;
 
   const handleImageError = (id: string) => {
-    setImageErrors(prev => new Set(prev).add(id));
+    setImageErrors((prev) => new Set(prev).add(id));
   };
 
-  const categoryEmoji: Record<WebNode["category"], string> = {
-    family: "👪",
-    event: "📅",
-    associate: "🤝",
-    place: "📍",
-    organization: "🏛️",
+  const centerX = 500;
+  const centerY = 400;
+
+  // Line style per category (inspired by the ecomap legend)
+  const lineStyles: Record<WebNode["category"], { dasharray: string; width: number }> = {
+    family: { dasharray: "", width: 2.5 },
+    associate: { dasharray: "6 3", width: 2 },
+    event: { dasharray: "2 2", width: 1.5 },
+    place: { dasharray: "8 4 2 4", width: 1.5 },
+    organization: { dasharray: "4 2", width: 2 },
   };
 
   return (
@@ -180,7 +226,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-5xl max-h-[95vh] overflow-y-auto px-4 py-6">
+      <div className="relative z-10 w-full max-w-6xl max-h-[95vh] overflow-auto px-4 py-6">
         {/* Close */}
         <button
           onClick={onClose}
@@ -190,9 +236,9 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
         </button>
 
         {/* Title */}
-        <div className="text-center mb-4">
+        <div className="text-center mb-2">
           <p className="text-primary font-body text-xs uppercase tracking-[0.3em] mb-1">
-            Connection Web
+            Relationship Connection Ecomap
           </p>
           <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground">
             {figureName}
@@ -200,116 +246,253 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap justify-center gap-3 mb-6">
-          {Object.entries(categoryLabels).map(([key, label]) => (
-            <div key={key} className="flex items-center gap-1.5">
-              <span
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: categoryColors[key as WebNode["category"]] }}
-              />
-              <span className="text-muted-foreground text-xs font-body">{label}</span>
-            </div>
-          ))}
+        <div className="flex flex-wrap justify-center gap-4 mb-4">
+          {Object.entries(categoryLabels).map(([key, label]) => {
+            const style = lineStyles[key as WebNode["category"]];
+            return (
+              <div key={key} className="flex items-center gap-2">
+                <svg width="28" height="8">
+                  <line
+                    x1="0" y1="4" x2="28" y2="4"
+                    stroke={categoryColors[key as WebNode["category"]]}
+                    strokeWidth={style.width}
+                    strokeDasharray={style.dasharray}
+                  />
+                </svg>
+                <span className="text-muted-foreground text-xs font-body">{label}</span>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Web diagram */}
-        <div className="relative w-full" style={{ paddingBottom: "100%", maxWidth: 700, margin: "0 auto" }}>
-          <div className="absolute inset-0">
-            {/* SVG connection lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-              {nodePositions.map((node) => (
-                <line
-                  key={`line-${node.id}`}
-                  x1="50"
-                  y1="50"
-                  x2={node.x}
-                  y2={node.y}
-                  stroke={categoryColors[node.category]}
-                  strokeWidth="0.3"
-                  strokeOpacity={selectedNode?.id === node.id ? 0.9 : 0.35}
-                  className="transition-all duration-300"
-                />
-              ))}
-              {/* Concentric rings */}
-              <circle cx="50" cy="50" r="38" fill="none" stroke="hsl(42 85% 55%)" strokeWidth="0.15" strokeOpacity="0.15" strokeDasharray="1 1" />
-              <circle cx="50" cy="50" r="19" fill="none" stroke="hsl(42 85% 55%)" strokeWidth="0.1" strokeOpacity="0.1" strokeDasharray="0.5 1" />
-            </svg>
+        {/* Ecomap SVG */}
+        <div className="relative w-full mx-auto" style={{ maxWidth: 1000 }}>
+          <svg viewBox="0 0 1000 800" className="w-full h-auto">
+            {/* Cluster ovals */}
+            {Object.entries(grouped).map(([cat, nodes]) => {
+              const layout = clusterLayout[cat as WebNode["category"]];
+              const angleRad = (layout.angle * Math.PI) / 180;
+              const clusterDist = 260 * layout.dist;
+              const cx = centerX + clusterDist * Math.cos(angleRad);
+              const cy = centerY + clusterDist * Math.sin(angleRad);
+              const count = nodes.length;
+              const r = Math.max(80, count * 25);
+              const color = categoryColors[cat as WebNode["category"]];
 
-            {/* Center node */}
-            <div
-              className="absolute rounded-full border-2 border-primary overflow-hidden shadow-gold cursor-default"
-              style={{
-                width: "16%",
-                height: "16%",
-                left: "42%",
-                top: "42%",
-              }}
-            >
-              <img
-                src={data.image}
-                alt={figureName}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-card/60 backdrop-blur-sm">
-                <span className="text-[0.55rem] md:text-xs font-display font-bold text-foreground text-center leading-tight px-1">
-                  {figureName.split(" ").slice(-1)[0]}
-                </span>
-              </div>
-            </div>
-
-            {/* Outer nodes */}
-            {nodePositions.map((node) => {
-              const isSelected = selectedNode?.id === node.id;
-              const hasError = imageErrors.has(node.id);
               return (
-                <button
-                  key={node.id}
-                  onClick={() => setSelectedNode(isSelected ? null : node)}
-                  className="absolute rounded-full overflow-hidden transition-all duration-300 group"
-                  style={{
-                    width: "10%",
-                    height: "10%",
-                    left: `${node.x - 5}%`,
-                    top: `${node.y - 5}%`,
-                    border: `2px solid ${categoryColors[node.category]}`,
-                    boxShadow: isSelected
-                      ? `0 0 0 2px ${categoryColors[node.category]}, 0 0 20px ${categoryColors[node.category]}60`
-                      : `0 2px 8px ${categoryColors[node.category]}30`,
-                    transform: isSelected ? "scale(1.25)" : "scale(1)",
-                    zIndex: isSelected ? 10 : 1,
-                  }}
-                >
-                  {!hasError ? (
-                    <img
-                      src={node.image}
-                      alt={node.label}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      onError={() => handleImageError(node.id)}
-                    />
-                  ) : (
-                    <div
-                      className="w-full h-full flex items-center justify-center"
-                      style={{ backgroundColor: categoryColors[node.category] }}
-                    >
-                      <span className="text-sm md:text-base">{categoryEmoji[node.category]}</span>
-                    </div>
-                  )}
-                  {/* Label tooltip */}
-                  <div
-                    className="absolute inset-0 flex items-center justify-center bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity"
+                <g key={`cluster-${cat}`}>
+                  <ellipse
+                    cx={cx}
+                    cy={cy}
+                    rx={r + 30}
+                    ry={r + 10}
+                    fill={`${color}08`}
+                    stroke={color}
+                    strokeWidth="1.5"
+                    strokeOpacity="0.35"
+                    
+                  />
+                  <text
+                    x={cx}
+                    y={cy - r - 4}
+                    textAnchor="middle"
+                    fill={color}
+                    fontSize="14"
+                    fontWeight="700"
+                    fontFamily="'Playfair Display', serif"
                   >
-                    <span className="text-[0.4rem] md:text-[0.55rem] font-display font-bold text-foreground text-center leading-tight px-0.5">
-                      {node.label}
-                    </span>
-                  </div>
-                </button>
+                    {categoryLabels[cat as WebNode["category"]]}
+                  </text>
+                </g>
               );
             })}
-          </div>
+
+            {/* Connection lines from center to each node */}
+            {Object.entries(grouped).map(([cat, nodes]) =>
+              nodes.map((node) => {
+                const pos = nodeAbsolutePositions[node.id];
+                if (!pos) return null;
+                const style = lineStyles[cat as WebNode["category"]];
+                const isSelected = selectedNode?.id === node.id;
+                return (
+                  <line
+                    key={`line-${node.id}`}
+                    x1={centerX}
+                    y1={centerY}
+                    x2={pos.x}
+                    y2={pos.y}
+                    stroke={categoryColors[cat as WebNode["category"]]}
+                    strokeWidth={isSelected ? style.width + 1 : style.width}
+                    strokeDasharray={style.dasharray}
+                    strokeOpacity={isSelected ? 0.9 : 0.4}
+                    className="transition-all duration-300"
+                  />
+                );
+              })
+            )}
+
+            {/* Center node */}
+            <circle
+              cx={centerX}
+              cy={centerY}
+              r="50"
+              fill="hsl(42 85% 55%)"
+              stroke="hsl(42 90% 65%)"
+              strokeWidth="3"
+            />
+            <clipPath id="center-clip">
+              <circle cx={centerX} cy={centerY} r="48" />
+            </clipPath>
+            <image
+              href={data.image}
+              x={centerX - 48}
+              y={centerY - 48}
+              width="96"
+              height="96"
+              clipPath="url(#center-clip)"
+              preserveAspectRatio="xMidYMid slice"
+            />
+            {/* Center overlay with name */}
+            <circle
+              cx={centerX}
+              cy={centerY}
+              r="48"
+              fill="hsl(30 10% 8% / 0.45)"
+            />
+            <text
+              x={centerX}
+              y={centerY + 2}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill="hsl(40 30% 95%)"
+              fontSize="14"
+              fontWeight="700"
+              fontFamily="'Playfair Display', serif"
+            >
+              {figureName.split(" ").length > 2
+                ? figureName.split(" ").slice(0, -1).join(" ")
+                : figureName.split(" ")[0]}
+            </text>
+            <text
+              x={centerX}
+              y={centerY + 18}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill="hsl(40 30% 95%)"
+              fontSize="14"
+              fontWeight="700"
+              fontFamily="'Playfair Display', serif"
+            >
+              {figureName.split(" ").length > 2
+                ? figureName.split(" ").slice(-1)[0]
+                : figureName.split(" ")[1] || ""}
+            </text>
+
+            {/* Nodes */}
+            {Object.entries(grouped).map(([cat, nodes]) =>
+              nodes.map((node) => {
+                const pos = nodeAbsolutePositions[node.id];
+                if (!pos) return null;
+                const color = categoryColors[cat as WebNode["category"]];
+                const isSelected = selectedNode?.id === node.id;
+                const nodeR = isSelected ? 34 : 28;
+                const hasError = imageErrors.has(node.id);
+
+                return (
+                  <g
+                    key={node.id}
+                    onClick={() => setSelectedNode(isSelected ? null : node)}
+                    className="cursor-pointer"
+                    style={{ transition: "transform 0.3s" }}
+                  >
+                    <circle
+                      cx={pos.x}
+                      cy={pos.y}
+                      r={nodeR + 2}
+                      fill={color}
+                      fillOpacity={isSelected ? 0.3 : 0.15}
+                      stroke={color}
+                      strokeWidth={isSelected ? 2.5 : 1.5}
+                      strokeOpacity={isSelected ? 1 : 0.6}
+                    />
+                    {!hasError ? (
+                      <>
+                        <clipPath id={`clip-${node.id}`}>
+                          <circle cx={pos.x} cy={pos.y} r={nodeR} />
+                        </clipPath>
+                        <image
+                          href={node.image}
+                          x={pos.x - nodeR}
+                          y={pos.y - nodeR}
+                          width={nodeR * 2}
+                          height={nodeR * 2}
+                          clipPath={`url(#clip-${node.id})`}
+                          preserveAspectRatio="xMidYMid slice"
+                          onError={() => handleImageError(node.id)}
+                        />
+                        <circle
+                          cx={pos.x}
+                          cy={pos.y}
+                          r={nodeR}
+                          fill="hsl(30 10% 8% / 0.5)"
+                        />
+                      </>
+                    ) : (
+                      <circle
+                        cx={pos.x}
+                        cy={pos.y}
+                        r={nodeR}
+                        fill={color}
+                        fillOpacity="0.25"
+                      />
+                    )}
+
+                    {/* Label inside node */}
+                    <text
+                      x={pos.x}
+                      y={pos.y}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="hsl(40 30% 95%)"
+                      fontSize={node.label.length > 18 ? "7" : node.label.length > 12 ? "8" : "9"}
+                      fontWeight="600"
+                      fontFamily="'DM Sans', sans-serif"
+                    >
+                      {node.label.length > 22
+                        ? node.label.slice(0, 20) + "…"
+                        : node.label}
+                    </text>
+
+                    {/* Year badge */}
+                    {node.year && (
+                      <>
+                        <rect
+                          x={pos.x - 14}
+                          y={pos.y + nodeR - 2}
+                          width="28"
+                          height="12"
+                          rx="6"
+                          fill={color}
+                        />
+                        <text
+                          x={pos.x}
+                          y={pos.y + nodeR + 5}
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          fill="hsl(40 30% 95%)"
+                          fontSize="7"
+                          fontWeight="700"
+                          fontFamily="'DM Sans', sans-serif"
+                        >
+                          {node.year}
+                        </text>
+                      </>
+                    )}
+                  </g>
+                );
+              })
+            )}
+          </svg>
         </div>
 
         {/* Detail panel */}
@@ -348,8 +531,11 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                   )}
                 </div>
                 <span
-                  className="inline-block text-[0.65rem] font-body uppercase tracking-wider mt-0.5 px-2 py-0.5 rounded-full text-accent-foreground"
-                  style={{ backgroundColor: categoryColors[selectedNode.category] + "30", color: categoryColors[selectedNode.category] }}
+                  className="inline-block text-[0.65rem] font-body uppercase tracking-wider mt-0.5 px-2 py-0.5 rounded-full"
+                  style={{
+                    backgroundColor: categoryColors[selectedNode.category] + "30",
+                    color: categoryColors[selectedNode.category],
+                  }}
                 >
                   {categoryLabels[selectedNode.category]}
                 </span>
