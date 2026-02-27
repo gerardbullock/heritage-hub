@@ -46,6 +46,13 @@ const figures = [
     emoji: "📚",
   },
   {
+    name: "Malcolm X",
+    years: "1925–1965",
+    role: "Revolutionary Leader & Orator",
+    description: "From street hustler to Nation of Islam minister to global human rights icon, his transformation and fiery oratory challenged America to confront its deepest racial sins.",
+    emoji: "🔥",
+  },
+  {
     name: "Black Panther Party",
     years: "1966–1982",
     role: "Revolutionary Organization",

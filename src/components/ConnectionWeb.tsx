@@ -150,6 +150,27 @@ const figureWebData: Record<string, { image: string; nodes: WebNode[] }> = {
       { id: "ghana", label: "Ghana", category: "place", image: "/images/naacp.jpg", detail: "Moved to Ghana in 1961, became a citizen, and died there in 1963 — the day before the March on Washington." },
     ],
   },
+  "Malcolm X": {
+    image: "/images/malcolm-x.jpg",
+    nodes: [
+      { id: "birth", label: "Born May 19, 1925", category: "event", image: "/images/omaha-nebraska.jpg", detail: "Born Malcolm Little in Omaha, Nebraska. His father, a Baptist minister and Marcus Garvey follower, was killed when Malcolm was six.", year: "1925" },
+      { id: "mother", label: "Louise Little", category: "family", image: "/images/omaha-nebraska.jpg", detail: "His mother, originally from Grenada. After her husband's death, she was committed to a mental institution and her children were split into foster homes." },
+      { id: "betty", label: "Betty Shabazz", category: "family", image: "/images/malcolm-x.jpg", detail: "His wife, a nurse and educator. They married in 1958 and had six daughters. She carried on his legacy after his assassination." },
+      { id: "daughters", label: "Attallah & Qubilah", category: "family", image: "/images/malcolm-x.jpg", detail: "His eldest daughters. Attallah became an actress and activist; Qubilah was later accused of plotting to kill Louis Farrakhan." },
+      { id: "elijah", label: "Elijah Muhammad", category: "associate", image: "/images/nation-of-islam.jpg", detail: "Leader of the Nation of Islam and Malcolm's mentor. Their split in 1964 over ideology and personal conduct changed the course of history." },
+      { id: "mlk", label: "Martin Luther King Jr.", category: "associate", image: "/images/mlk-jr.jpg", detail: "Ideological counterpart. They met only once, in March 1964 at the U.S. Capitol. Despite their differences, both sought Black liberation." },
+      { id: "angelou", label: "Maya Angelou", category: "associate", image: "/images/caged-bird-sings.jpg", detail: "Close friend who worked with Malcolm in the Organization of Afro-American Unity. His assassination deeply affected her." },
+      { id: "ali", label: "Muhammad Ali", category: "associate", image: "/images/malcolm-x.jpg", detail: "Malcolm mentored the young Cassius Clay and introduced him to the Nation of Islam. Their friendship later fractured over Malcolm's split with Elijah Muhammad." },
+      { id: "noi_join", label: "Joined Nation of Islam", category: "event", image: "/images/nation-of-islam.jpg", detail: "Converted while in prison in 1948. Rose rapidly to become the Nation's most prominent spokesman, growing membership from 500 to 30,000.", year: "1952" },
+      { id: "ballot", label: "The Ballot or the Bullet", category: "event", image: "/images/malcolm-x.jpg", detail: "His legendary 1964 speech urged Black Americans to exercise their right to vote — or defend themselves by any means necessary.", year: "1964" },
+      { id: "hajj", label: "Pilgrimage to Mecca", category: "event", image: "/images/mecca-hajj.jpg", detail: "His 1964 Hajj transformed his worldview. Praying alongside white Muslims, he embraced a universal brotherhood that transcended race.", year: "1964" },
+      { id: "assassination", label: "Assassinated Feb 1965", category: "event", image: "/images/audubon-ballroom.jpg", detail: "Shot and killed at the Audubon Ballroom in Harlem on February 21, 1965, while speaking to the Organization of Afro-American Unity.", year: "1965" },
+      { id: "harlem", label: "Harlem, New York", category: "place", image: "/images/harlem-ny.jpg", detail: "His spiritual home. Minister of Temple No. 7 in Harlem, where he built the Nation of Islam's most powerful chapter." },
+      { id: "omaha", label: "Omaha, Nebraska", category: "place", image: "/images/omaha-nebraska.jpg", detail: "His birthplace. The family fled after Klan threats. His childhood of displacement and racism forged his revolutionary fire." },
+      { id: "noi", label: "Nation of Islam", category: "organization", image: "/images/nation-of-islam.jpg", detail: "The Black Muslim organization that gave Malcolm his platform. He built it into a national force before his bitter 1964 departure." },
+      { id: "oaau", label: "OAAU", category: "organization", image: "/images/audubon-ballroom.jpg", detail: "Founded the Organization of Afro-American Unity in 1964 to internationalize the Black freedom struggle and connect it to global human rights." },
+    ],
+  },
   "Black Panther Party": {
     image: "/images/black-panther-party.jpg",
     nodes: [
