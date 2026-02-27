@@ -497,10 +497,10 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
 
         {/* Detail panel */}
         {selectedNode && (
-          <div className="mt-4 max-w-xl mx-auto bg-card border border-border rounded-xl overflow-hidden animate-scale-in shadow-gold">
+          <div className="mt-4 w-full bg-card border border-border rounded-xl overflow-hidden animate-scale-in shadow-gold">
             {/* Large image banner with zoom animation */}
             <div
-              className="relative w-full h-64 overflow-hidden cursor-pointer group"
+              className="relative w-full h-[28rem] overflow-hidden cursor-pointer group"
               style={{ borderBottom: `3px solid ${categoryColors[selectedNode.category]}` }}
             >
               {!imageErrors.has(selectedNode.id) ? (
