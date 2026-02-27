@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FigureLayout from "./FigureLayout";
+import ConnectionWeb from "./ConnectionWeb";
 
 const figures = [
   {
@@ -48,6 +49,7 @@ const figures = [
 
 const FeaturedFigures = () => {
   const [selectedFigure, setSelectedFigure] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"layout" | "web">("web");
 
   return (
     <section id="figures" className="py-24 bg-secondary/30">
@@ -96,10 +98,43 @@ const FeaturedFigures = () => {
       </div>
 
       {selectedFigure && (
-        <FigureLayout
-          figureName={selectedFigure}
-          onClose={() => setSelectedFigure(null)}
-        />
+        <div>
+          {/* View mode toggle */}
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex bg-card border border-border rounded-full p-1 shadow-gold">
+            <button
+              onClick={() => setViewMode("web")}
+              className={`px-4 py-1.5 rounded-full text-xs font-body transition-all ${
+                viewMode === "web"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Connection Web
+            </button>
+            <button
+              onClick={() => setViewMode("layout")}
+              className={`px-4 py-1.5 rounded-full text-xs font-body transition-all ${
+                viewMode === "layout"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Historical Layout
+            </button>
+          </div>
+
+          {viewMode === "web" ? (
+            <ConnectionWeb
+              figureName={selectedFigure}
+              onClose={() => setSelectedFigure(null)}
+            />
+          ) : (
+            <FigureLayout
+              figureName={selectedFigure}
+              onClose={() => setSelectedFigure(null)}
+            />
+          )}
+        </div>
       )}
     </section>
   );
