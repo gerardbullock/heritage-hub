@@ -497,31 +497,31 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
 
         {/* Detail panel */}
         {selectedNode && (
-          <div className="mt-4 max-w-lg mx-auto bg-card border border-border rounded-xl p-5 animate-fade-up shadow-gold">
-            <div className="flex items-start gap-4">
-              <div
-                className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 border-2"
-                style={{ borderColor: categoryColors[selectedNode.category] }}
-              >
-                {!imageErrors.has(selectedNode.id) ? (
-                  <img
-                    src={selectedNode.image}
-                    alt={selectedNode.label}
-                    className="w-full h-full object-cover"
-                    onError={() => handleImageError(selectedNode.id)}
-                  />
-                ) : (
-                  <div
-                    className="w-full h-full flex items-center justify-center"
-                    style={{ backgroundColor: categoryColors[selectedNode.category] }}
-                  >
-                    <span className="text-xl">{categoryEmoji[selectedNode.category]}</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex-1">
+          <div className="mt-4 max-w-xl mx-auto bg-card border border-border rounded-xl overflow-hidden animate-fade-up shadow-gold">
+            {/* Large image banner */}
+            <div
+              className="relative w-full h-48 overflow-hidden"
+              style={{ borderBottom: `3px solid ${categoryColors[selectedNode.category]}` }}
+            >
+              {!imageErrors.has(selectedNode.id) ? (
+                <img
+                  src={selectedNode.image}
+                  alt={selectedNode.label}
+                  className="w-full h-full object-cover"
+                  onError={() => handleImageError(selectedNode.id)}
+                />
+              ) : (
+                <div
+                  className="w-full h-full flex items-center justify-center"
+                  style={{ backgroundColor: categoryColors[selectedNode.category] }}
+                >
+                  <span className="text-5xl">{categoryEmoji[selectedNode.category]}</span>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+              <div className="absolute bottom-3 left-5 right-5">
                 <div className="flex items-center gap-2">
-                  <h4 className="font-display font-bold text-foreground text-lg">
+                  <h4 className="font-display font-bold text-foreground text-xl">
                     {selectedNode.label}
                   </h4>
                   {selectedNode.year && (
@@ -531,7 +531,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                   )}
                 </div>
                 <span
-                  className="inline-block text-[0.65rem] font-body uppercase tracking-wider mt-0.5 px-2 py-0.5 rounded-full"
+                  className="inline-block text-[0.65rem] font-body uppercase tracking-wider mt-1 px-2 py-0.5 rounded-full"
                   style={{
                     backgroundColor: categoryColors[selectedNode.category] + "30",
                     color: categoryColors[selectedNode.category],
@@ -539,10 +539,12 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                 >
                   {categoryLabels[selectedNode.category]}
                 </span>
-                <p className="text-muted-foreground font-body text-sm mt-2 leading-relaxed">
-                  {selectedNode.detail}
-                </p>
               </div>
+            </div>
+            <div className="p-5">
+              <p className="text-muted-foreground font-body text-sm leading-relaxed">
+                {selectedNode.detail}
+              </p>
             </div>
           </div>
         )}
