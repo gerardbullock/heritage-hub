@@ -286,6 +286,11 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
     organization: { dasharray: "4 2", width: 2.5 },
   };
 
+  // Determine if this is a "person" figure (has a local or wiki image, not an org logo style)
+  // We detect individuals by checking if their name appears as a node label in another figure's data
+  // For simplicity: if the figure image is a portrait-style image, show hero portrait layout
+  const isIndividual = !["Deacons for Defense", "Black Panther Party"].includes(figureName);
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col">
       <div
@@ -293,46 +298,85 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
         onClick={onClose}
       />
 
-      {/* Fixed slim top bar — h-[56px] */}
-      <div className="relative z-20 flex items-center h-14 px-4 bg-card/70 backdrop-blur-md border-b border-border/20 shrink-0">
-        {/* Title left-center */}
-        <h1 className="font-display font-bold text-foreground text-[clamp(1.4rem,3vw,2.2rem)] leading-tight truncate flex-1">
-          {figureName}
-        </h1>
+      {/* Fixed slim top bar */}
+      <div className="relative z-20 flex items-center h-12 px-4 bg-card/70 backdrop-blur-md border-b border-border/20 shrink-0">
+        {/* Legend inline */}
+        <div className="flex items-center gap-2.5 flex-1 overflow-x-auto">
+          {Object.entries(categoryLabels).map(([key, label]) => {
+            const style = lineStyles[key as WebNode["category"]];
+            return (
+              <div key={key} className="flex items-center gap-1 shrink-0">
+                <svg width="12" height="4">
+                  <line
+                    x1="0" y1="2" x2="12" y2="2"
+                    stroke={categoryColors[key as WebNode["category"]]}
+                    strokeWidth={style.width}
+                    strokeDasharray={style.dasharray}
+                  />
+                </svg>
+                <span className="text-muted-foreground text-[9px] font-body leading-none">{label}</span>
+              </div>
+            );
+          })}
+        </div>
         <button
           onClick={onClose}
-          className="ml-3 p-1.5 rounded-full hover:bg-secondary transition-all text-muted-foreground hover:text-foreground shrink-0"
+          className="ml-2 p-1.5 rounded-full hover:bg-secondary transition-all text-muted-foreground hover:text-foreground shrink-0"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Legend pill bar */}
-      <div className="relative z-20 flex items-center justify-center gap-3 flex-wrap px-4 py-1.5 bg-card/40 backdrop-blur-sm border-b border-border/10 shrink-0">
-        {Object.entries(categoryLabels).map(([key, label]) => {
-          const style = lineStyles[key as WebNode["category"]];
-          return (
-            <div key={key} className="flex items-center gap-1">
-              <svg width="14" height="4">
-                <line
-                  x1="0" y1="2" x2="14" y2="2"
-                  stroke={categoryColors[key as WebNode["category"]]}
-                  strokeWidth={style.width}
-                  strokeDasharray={style.dasharray}
-                />
-              </svg>
-              <span className="text-muted-foreground text-[10px] font-body leading-none">{label}</span>
-            </div>
-          );
-        })}
-      </div>
-
       {/* Scrollable content area */}
-      <div className="relative z-10 flex-1 overflow-auto flex flex-col items-center px-6 md:px-16 lg:px-24 pt-8 md:pt-12 pb-16">
+      <div className="relative z-10 flex-1 overflow-auto flex flex-col items-center">
 
-        {/* Ecomap SVG — generous panel */}
-        <div className="relative w-full mx-auto rounded-2xl bg-card/30 border border-border/20 backdrop-blur-sm p-6 md:p-10 lg:p-14 shadow-[0_0_60px_-15px_hsl(42_85%_55%/0.08)]" style={{ maxWidth: 1200 }}>
-          <svg viewBox="0 0 1200 840" className="w-full h-auto" style={{ minHeight: '65vh' }}>
+        {/* Hero portrait section for individuals */}
+        {isIndividual && (
+          <div className="relative w-full flex flex-col items-center pt-6 pb-4 px-4">
+            {/* Large circular portrait */}
+            <div
+              className="relative rounded-full overflow-hidden shadow-[0_0_50px_-10px_hsl(42_85%_55%/0.35)] animate-scale-in"
+              style={{ width: 'clamp(220px, 40vw, 380px)', height: 'clamp(220px, 40vw, 380px)' }}
+            >
+              <img
+                src={data.image}
+                alt={figureName}
+                className="w-full h-full object-cover animate-[zoomIn_0.8s_ease-out_forwards]"
+                style={{ transformOrigin: 'center center' }}
+              />
+              {/* Subtle dark vignette at bottom for name overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+              {/* Name overlaid at bottom of portrait */}
+              <div className="absolute bottom-4 left-0 right-0 text-center">
+                <h1 className="font-display font-bold text-foreground text-[clamp(1.1rem,2.5vw,1.6rem)] leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                  {figureName}
+                </h1>
+              </div>
+            </div>
+            {/* Gold ring accent */}
+            <div
+              className="absolute rounded-full border-2 border-primary/40 pointer-events-none animate-fade-in"
+              style={{
+                width: 'clamp(236px, 41vw, 396px)',
+                height: 'clamp(236px, 41vw, 396px)',
+                top: 'calc(1.5rem - 8px)',
+              }}
+            />
+          </div>
+        )}
+
+        {/* For groups/orgs, show a compact title instead */}
+        {!isIndividual && (
+          <div className="pt-6 pb-2 text-center px-4">
+            <h1 className="font-display font-bold text-foreground text-[clamp(1.6rem,3.5vw,2.4rem)] leading-tight">
+              {figureName}
+            </h1>
+          </div>
+        )}
+
+        {/* Ecomap SVG */}
+        <div className="relative w-full mx-auto rounded-2xl bg-card/20 border border-border/10 backdrop-blur-sm p-4 md:p-8 lg:p-12 mt-4" style={{ maxWidth: 1200 }}>
+          <svg viewBox="0 0 1200 840" className="w-full h-auto" style={{ minHeight: '60vh' }}>
             {/* Cluster ovals */}
             {Object.entries(grouped).map(([cat, nodes]) => {
               const layout = clusterLayout[cat as WebNode["category"]];
@@ -355,7 +399,6 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                     stroke={color}
                     strokeWidth="1"
                     strokeOpacity="0.25"
-                    
                   />
                   <text
                     x={cx}
@@ -397,15 +440,6 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             )}
 
             {/* Center node — large & prominent */}
-            <circle
-              cx={centerX}
-              cy={centerY}
-              r="110"
-              fill="hsl(42 85% 55%)"
-              stroke="hsl(42 90% 65%)"
-              strokeWidth="6"
-              filter="url(#glow)"
-            />
             <defs>
               <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="8" result="blur" />
@@ -415,6 +449,15 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                 </feMerge>
               </filter>
             </defs>
+            <circle
+              cx={centerX}
+              cy={centerY}
+              r="110"
+              fill="hsl(42 85% 55%)"
+              stroke="hsl(42 90% 65%)"
+              strokeWidth="6"
+              filter="url(#glow)"
+            />
             <clipPath id="center-clip">
               <circle cx={centerX} cy={centerY} r="106" />
             </clipPath>
@@ -572,7 +615,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
 
         {/* Detail panel — hero portrait + info */}
         {selectedNode && (
-          <div ref={detailRef} className="w-full max-w-3xl mx-auto mt-8 bg-card border border-border rounded-2xl overflow-hidden animate-scale-in shadow-gold">
+          <div ref={detailRef} className="w-full max-w-3xl mx-auto mt-10 mb-16 bg-card border border-border rounded-2xl overflow-hidden animate-scale-in shadow-gold px-0">
             {/* Hero portrait */}
             <div
               className="relative w-full aspect-[4/3] md:aspect-[16/9] min-h-[300px] max-h-[450px] overflow-hidden cursor-pointer group"
@@ -630,7 +673,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
           </div>
         )}
 
-      {/* Fullscreen lightbox */}
+        {/* Fullscreen lightbox */}
         {lightboxOpen && selectedNode && (
           <div
             className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex items-center justify-center animate-fade-in cursor-pointer"
