@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { X, ZoomIn } from "lucide-react";
 
 interface WebNode {
@@ -220,6 +220,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
   const [selectedNode, setSelectedNode] = useState<WebNode | null>(null);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const detailRef = useRef<HTMLDivElement>(null);
   const data = figureWebData[figureName];
 
   // Group nodes by category
@@ -261,7 +262,13 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
     return positions;
   }, [grouped]);
 
-  if (!data) return null;
+  // Auto-scroll to detail panel when a node is selected
+  useEffect(() => {
+    if (selectedNode && detailRef.current) {
+      detailRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [selectedNode]);
+
 
   const handleImageError = (id: string) => {
     setImageErrors((prev) => new Set(prev).add(id));
@@ -551,12 +558,12 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
           </svg>
         </div>
 
-        {/* Detail panel */}
+        {/* Detail panel — hero portrait + info */}
         {selectedNode && (
-          <div className="mt-4 w-full bg-card border border-border rounded-xl overflow-hidden animate-scale-in shadow-gold">
-            {/* Large image banner with zoom animation */}
+          <div ref={detailRef} className="w-full max-w-3xl mx-auto mt-8 bg-card border border-border rounded-2xl overflow-hidden animate-scale-in shadow-gold">
+            {/* Hero portrait */}
             <div
-              className="relative w-full h-[28rem] overflow-hidden cursor-pointer group"
+              className="relative w-full aspect-[4/3] md:aspect-[16/9] min-h-[300px] max-h-[450px] overflow-hidden cursor-pointer group"
               onClick={() => setLightboxOpen(true)}
               style={{ borderBottom: `3px solid ${categoryColors[selectedNode.category]}` }}
             >
@@ -564,7 +571,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                 <img
                   src={selectedNode.image}
                   alt={selectedNode.label}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out scale-110 group-hover:scale-125 animate-[zoomIn_0.8s_ease-out_forwards]"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out scale-105 group-hover:scale-115 animate-[zoomIn_0.8s_ease-out_forwards]"
                   style={{ transformOrigin: 'center center' }}
                   onError={() => handleImageError(selectedNode.id)}
                 />
@@ -573,17 +580,17 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                   className="w-full h-full flex items-center justify-center"
                   style={{ backgroundColor: categoryColors[selectedNode.category] }}
                 >
-                  <span className="text-5xl">{categoryEmoji[selectedNode.category]}</span>
+                  <span className="text-6xl">{categoryEmoji[selectedNode.category]}</span>
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
               {/* Zoom hint */}
               <div className="absolute top-3 right-3 bg-background/70 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <ZoomIn className="w-5 h-5 text-foreground" />
               </div>
-              <div className="absolute bottom-3 left-5 right-5 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
+              <div className="absolute bottom-4 left-6 right-6 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
                 <div className="flex items-center gap-2">
-                  <h4 className="font-display font-bold text-foreground text-2xl drop-shadow-lg">
+                  <h4 className="font-display font-bold text-foreground text-2xl md:text-3xl drop-shadow-lg">
                     {selectedNode.label}
                   </h4>
                   {selectedNode.year && (
@@ -593,7 +600,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                   )}
                 </div>
                 <span
-                  className="inline-block text-xs font-body uppercase tracking-wider mt-1 px-2.5 py-1 rounded-full"
+                  className="inline-block text-xs font-body uppercase tracking-wider mt-1.5 px-2.5 py-1 rounded-full"
                   style={{
                     backgroundColor: categoryColors[selectedNode.category] + "30",
                     color: categoryColors[selectedNode.category],
@@ -603,7 +610,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                 </span>
               </div>
             </div>
-            <div className="p-5">
+            <div className="p-6">
               <p className="text-muted-foreground font-body text-base leading-relaxed">
                 {selectedNode.detail}
               </p>
