@@ -62,7 +62,7 @@ const figureWebData: Record<string, { image: string; nodes: WebNode[] }> = {
       { id: "nobel", label: "Nobel Peace Prize", category: "event", image: "https://upload.wikimedia.org/wikipedia/en/thumb/e/ed/Nobel_Prize.png/220px-Nobel_Prize.png", detail: "Awarded the Nobel Peace Prize in 1964 at age 35 — the youngest recipient at the time.", year: "1964" },
       { id: "selma", label: "Selma to Montgomery", category: "event", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Bloody_Sunday-officers_await_marchers.jpeg/220px-Bloody_Sunday-officers_await_marchers.jpeg", detail: "Led the 1965 marches that led directly to the Voting Rights Act of 1965.", year: "1965" },
       { id: "atlanta", label: "Atlanta, Georgia", category: "place", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Ebenezer_Baptist_Church.jpg/220px-Ebenezer_Baptist_Church.jpg", detail: "Born and raised in Atlanta. Ebenezer Baptist Church was the spiritual home of the King family." },
-      { id: "sclc", label: "SCLC", category: "organization", image: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/SCLC_seal.png/220px-SCLC_seal.png", detail: "Co-founded the Southern Christian Leadership Conference in 1957, the organizational backbone of his movement." },
+      { id: "sclc", label: "SCLC", category: "organization", image: "/images/sclc-mlk.jpg", detail: "Co-founded the Southern Christian Leadership Conference in 1957, the organizational backbone of his movement." },
     ],
   },
   "Harriet Tubman": {
