@@ -238,10 +238,10 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
 
         {/* Title */}
         <div className="text-center mb-2">
-          <p className="text-primary font-body text-xs uppercase tracking-[0.3em] mb-1">
+          <p className="text-primary font-body text-sm uppercase tracking-[0.3em] mb-1">
             Relationship Connection Ecomap
           </p>
-          <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground">
+          <h3 className="text-3xl md:text-4xl font-display font-bold text-foreground">
             {figureName}
           </h3>
         </div>
@@ -260,7 +260,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                     strokeDasharray={style.dasharray}
                   />
                 </svg>
-                <span className="text-muted-foreground text-xs font-body">{label}</span>
+                <span className="text-muted-foreground text-sm font-body">{label}</span>
               </div>
             );
           })}
@@ -295,10 +295,10 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                   />
                   <text
                     x={cx}
-                    y={cy - r - 4}
+                    y={cy - r - 6}
                     textAnchor="middle"
                     fill={color}
-                    fontSize="14"
+                    fontSize="18"
                     fontWeight="700"
                     fontFamily="'Playfair Display', serif"
                   >
@@ -366,7 +366,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
               textAnchor="middle"
               dominantBaseline="middle"
               fill="hsl(40 30% 95%)"
-              fontSize="14"
+              fontSize="16"
               fontWeight="700"
               fontFamily="'Playfair Display', serif"
             >
@@ -376,11 +376,11 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
             </text>
             <text
               x={centerX}
-              y={centerY + 18}
+              y={centerY + 20}
               textAnchor="middle"
               dominantBaseline="middle"
               fill="hsl(40 30% 95%)"
-              fontSize="14"
+              fontSize="16"
               fontWeight="700"
               fontFamily="'Playfair Display', serif"
             >
@@ -455,7 +455,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fill="hsl(40 30% 95%)"
-                      fontSize={node.label.length > 18 ? "7" : node.label.length > 12 ? "8" : "9"}
+                      fontSize={node.label.length > 18 ? "9" : node.label.length > 12 ? "10" : "11"}
                       fontWeight="600"
                       fontFamily="'DM Sans', sans-serif"
                     >
@@ -481,7 +481,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                           textAnchor="middle"
                           dominantBaseline="middle"
                           fill="hsl(40 30% 95%)"
-                          fontSize="7"
+                          fontSize="9"
                           fontWeight="700"
                           fontFamily="'DM Sans', sans-serif"
                         >
@@ -532,13 +532,13 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
                     {selectedNode.label}
                   </h4>
                   {selectedNode.year && (
-                    <span className="text-xs font-body bg-primary/20 text-primary px-2 py-0.5 rounded-full">
+                    <span className="text-sm font-body bg-primary/20 text-primary px-2.5 py-0.5 rounded-full">
                       {selectedNode.year}
                     </span>
                   )}
                 </div>
                 <span
-                  className="inline-block text-[0.65rem] font-body uppercase tracking-wider mt-1 px-2 py-0.5 rounded-full"
+                  className="inline-block text-xs font-body uppercase tracking-wider mt-1 px-2.5 py-1 rounded-full"
                   style={{
                     backgroundColor: categoryColors[selectedNode.category] + "30",
                     color: categoryColors[selectedNode.category],
@@ -549,7 +549,7 @@ const ConnectionWeb = ({ figureName, onClose }: ConnectionWebProps) => {
               </div>
             </div>
             <div className="p-5">
-              <p className="text-muted-foreground font-body text-sm leading-relaxed">
+              <p className="text-muted-foreground font-body text-base leading-relaxed">
                 {selectedNode.detail}
               </p>
             </div>
